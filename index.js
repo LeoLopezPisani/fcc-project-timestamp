@@ -18,13 +18,20 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-
+app.get("/api/:date", function(req, res){
+  let date = new Date(req.params.date);
+  if(isNaN(date)) {
+    date = new Date(+req.params.date);
+  }
+  req.unixDate = date.getTime();
+  req.stringDate = new Date(req.unixDate);
+  res.json({"unix": req.unixDate, "utc": req.stringDate.toUTCString()});
+})
 
 // Listen on port set in environment variable or default to 3000
 var listener = app.listen(process.env.PORT || 3000, function () {
